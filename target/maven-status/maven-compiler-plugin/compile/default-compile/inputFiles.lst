@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 D:\work-space\HumanDigitalTwin\src\main\java\human\Human.java
 D:\work-space\HumanDigitalTwin\src\main\java\human\MyGlobalKeywords.java
 D:\work-space\HumanDigitalTwin\src\main\java\human\MyPhysicalAdapter.java
@@ -10,3 +11,17 @@ D:\work-space\HumanDigitalTwin\src\main\java\mqttPhisicalAdapter\JsonProducer.ja
 D:\work-space\HumanDigitalTwin\src\main\java\mqttPhisicalAdapter\MessageDescriptor.java
 D:\work-space\HumanDigitalTwin\src\main\java\mqttPhisicalAdapter\SimpleConsumer.java
 D:\work-space\HumanDigitalTwin\src\main\java\mqttPhisicalAdapter\TestMain.java
+=======
+C:\Università\work-space\HumanDigitalTwin\src\main\java\human\Human.java
+C:\Università\work-space\HumanDigitalTwin\src\main\java\human\MyGlobalKeywords.java
+C:\Università\work-space\HumanDigitalTwin\src\main\java\human\MyPhysicalAdapter.java
+C:\Università\work-space\HumanDigitalTwin\src\main\java\human\MyShadowingFunction.java
+C:\Università\work-space\HumanDigitalTwin\src\main\java\human\PersonalData.java
+C:\Università\work-space\HumanDigitalTwin\src\main\java\mqttPhisicalAdapter\ConsoleDigitalAdapter.java
+C:\Università\work-space\HumanDigitalTwin\src\main\java\mqttPhisicalAdapter\DefaultShadowingFunction.java
+C:\Università\work-space\HumanDigitalTwin\src\main\java\mqttPhisicalAdapter\EngineSensor.java
+C:\Università\work-space\HumanDigitalTwin\src\main\java\mqttPhisicalAdapter\JsonProducer.java
+C:\Università\work-space\HumanDigitalTwin\src\main\java\mqttPhisicalAdapter\MessageDescriptor.java
+C:\Università\work-space\HumanDigitalTwin\src\main\java\mqttPhisicalAdapter\SimpleConsumer.java
+C:\Università\work-space\HumanDigitalTwin\src\main\java\mqttPhisicalAdapter\TestMain.java
+>>>>>>> bc8def2 (Risolto problema embedded Git)
