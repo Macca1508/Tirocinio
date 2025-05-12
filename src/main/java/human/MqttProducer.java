@@ -1,36 +1,38 @@
-package mqttPhisicalAdapter;
+package human;
 
-import com.google.gson.Gson;
+import java.util.UUID;
 
-import org.eclipse.paho.client.mqttv3.*;
+import org.eclipse.paho.client.mqttv3.IMqttClient;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttClientPersistence;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.UUID;
+import com.google.gson.Gson;
 
-/**
- * Simple MQTT Producer using the library Eclipse Paho
- * and generating JSON structured messages
- *
- * @author Marco Picone, Ph.D. - picone.m@gmail.com
- * @project mqtt-playground
- * @created 14/10/2020 - 09:19
- */
-public class JsonProducer {
+import mqttPhisicalAdapter.EngineSensor;
+import mqttPhisicalAdapter.JsonProducer;
+import mqttPhisicalAdapter.MessageDescriptor;
 
-    private final static Logger logger = LoggerFactory.getLogger(JsonProducer.class);
+public class MqttProducer {
+	private final static Logger logger = LoggerFactory.getLogger(JsonProducer.class);
 
     //BROKER URL
     private static String BROKER_URI = "tcp://127.0.0.1:1883";
 
     //Message Limit generated and sent by the producer
-    private static final int MESSAGE_COUNT = 100;
+    private static final int MESSAGE_COUNT = 50;
 
-    private static final long SLEEP_TIME_MS = 5000;
+    private static final long SLEEP_TIME_MS = 2000;
 
     //Topic used to publish generated demo data
-    private static final String TOPIC = "sensor/state";
+    private static final String TOPIC1 = "sensor/Beats";
+    private static final String TOPIC2 = "sensor/Systolic";
+    private static final String TOPIC3 = "sensor/Diastolic";
 
     public static void main(String[] args) {
 
@@ -62,20 +64,30 @@ public class JsonProducer {
             logger.info("Connected ! Client Id: {}", mqttClientId);
 
             //Create an instance of an Engine Temperature Sensor
-            EngineSensor engineTemperatureSensor = new EngineSensor();
+            SmartWatch MySmartWatch = new SmartWatch();
 
             //Start to publish MESSAGE_COUNT messages
             for(int i = 0; i < MESSAGE_COUNT; i++) {
 
                 //Get updated temperature value and build the associated Json Message
                 //through the internal method buildJsonMessage
-            	double sensorValue = engineTemperatureSensor.getTemperatureValue();
-            	String payloadString = buildJsonMessage(sensorValue, engineTemperatureSensor.getHumidityValue());
+            	String payloadBeats =  ""+MySmartWatch.getBeatsMinute();
+            	String payloadSystolic = ""+MySmartWatch.getSystolicPressure();
+            	String payloadDiastolic = ""+ MySmartWatch.getDiastolicPressure();
+            	//String payloadString = "Time: "+System.currentTimeMillis()+" , ENGINE_SENSOR , Battiti al minuto: "+MySmartWatch.getBeatsMinute()+", Pressione sistolica: "+MySmartWatch.getSystolicPressure()+", Pressione diastolica: "+ MySmartWatch.getDiastolicPressure();
 
             	//Internal Method to publish MQTT data using the created MQTT Client
-            	if(payloadString != null)
-            		publishData(client, TOPIC, payloadString);
-            	else
+            	if(payloadBeats != null) {
+            		publishData(client, TOPIC1, payloadBeats);
+	            	if(payloadSystolic != null) {
+	            		publishData(client, TOPIC2, payloadSystolic);
+		            	if(payloadSystolic != null)
+		            		publishData(client, TOPIC3, payloadDiastolic);    		
+		            	else
+		            		logger.error("Skipping message send due to NULL Payload !");
+	            	}else
+	            		logger.error("Skipping message send due to NULL Payload !");
+            	}else
             		logger.error("Skipping message send due to NULL Payload !");
 
             	Thread.sleep(SLEEP_TIME_MS);
@@ -93,7 +105,7 @@ public class JsonProducer {
 
     }
 
-    public static String buildJsonMessage(double temperatureSensorValue, double humiditySensorValue) {
+    public static String buildJsonMessage(int temperatureSensorValue, double humiditySensorValue) {
 
     	try {
 
@@ -136,5 +148,4 @@ public class JsonProducer {
         }
 
     }
-
 }

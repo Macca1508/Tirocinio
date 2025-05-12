@@ -1,4 +1,4 @@
-package mqttPhisicalAdapter;
+package human;
 
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;

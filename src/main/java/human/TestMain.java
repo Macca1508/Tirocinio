@@ -1,15 +1,10 @@
-package mqttPhisicalAdapter;
-
-import com.google.gson.Gson;
+package human;
 
 import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapter;
 import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapterConfiguration;
 import it.wldt.adapter.mqtt.physical.topic.MqttQosLevel;
 import it.wldt.adapter.mqtt.physical.topic.incoming.DigitalTwinIncomingTopic;
 import it.wldt.adapter.mqtt.physical.topic.incoming.MqttSubscribeFunction;
-import mqttPhisicalAdapter.ConsoleDigitalAdapter;
-import mqttPhisicalAdapter.DefaultShadowingFunction;
-import mqttPhisicalAdapter.MessageDescriptor;
 import it.wldt.adapter.physical.PhysicalAssetProperty;
 import it.wldt.adapter.physical.event.PhysicalAssetPropertyWldtEvent;
 import it.wldt.core.engine.DigitalTwin;
@@ -25,7 +20,7 @@ public class TestMain {
 
         try{
 
-            DigitalTwin digitalTwin = new DigitalTwin("mqtt-digital-twin", new DefaultShadowingFunction());
+            DigitalTwin digitalTwin = new DigitalTwin("mqtt-digital-twin", new MyShadowingFunction());
 
             // Create an Instance of ConsoleDigital Adapter
             ConsoleDigitalAdapter consoleDigitalAdapter = new ConsoleDigitalAdapter();
@@ -33,9 +28,11 @@ public class TestMain {
             // Create an instance of MqttPhysical Adapter Configuration
             MqttPhysicalAdapterConfiguration config = MqttPhysicalAdapterConfiguration.builder("127.0.0.1", 1883)
                     .addPhysicalAssetPropertyAndTopic("intensity", 0, "sensor/intensity", Integer::parseInt)
-                    .addIncomingTopic(new DigitalTwinIncomingTopic("sensor/state", getSensorStateFunction()), createIncomingTopicRelatedPropertyList(), new ArrayList<>())
+                    .addIncomingTopic(new DigitalTwinIncomingTopic("sensor/Beats", getSensorStateFunction1()), createIncomingTopicRelatedPropertyList1(), new ArrayList<>())
+                    .addIncomingTopic(new DigitalTwinIncomingTopic("sensor/Systolic", getSensorStateFunction2()), createIncomingTopicRelatedPropertyList2(), new ArrayList<>())
+                    .addIncomingTopic(new DigitalTwinIncomingTopic("sensor/Diastolic", getSensorStateFunction3()), createIncomingTopicRelatedPropertyList3(), new ArrayList<>())
                     .addPhysicalAssetEventAndTopic("overheating", "text/plain", "sensor/overheating", Function.identity())
-                    .addPhysicalAssetActionAndTopic("switch-off", "sensor.actuation", "text/plain", "sensor/actions/switch", actionBody -> "switch" + actionBody)
+                    .addPhysicalAssetActionAndTopic("switch-off", "sensor.actuation", "text/plain", "sensor/actions/switch", actionBody -> "switch " + actionBody)
                     .build();
 
 
@@ -48,6 +45,8 @@ public class TestMain {
                     true,
                     actionBody -> "switch" + actionBody)
             */
+            //.addIncomingTopic(new DigitalTwinIncomingTopic("sensor/Systolic", getSensorStateFunction()), createIncomingTopicRelatedPropertyList(), new ArrayList<>())
+            //.addIncomingTopic(new DigitalTwinIncomingTopic("sensor/Diastolic", getSensorStateFunction()), createIncomingTopicRelatedPropertyList(), new ArrayList<>())
 
             //                .addPhysicalAssetPropertyAndTopic("intensity", 0, "sensor/intensity", Integer::parseInt)
             //                .addIncomingTopic(new DigitalTwinIncomingTopic("sensor/state", getSensorStateFunction()))
@@ -84,20 +83,53 @@ public class TestMain {
 
     }
 
-    private static List<PhysicalAssetProperty<?>> createIncomingTopicRelatedPropertyList(){
+    private static List<PhysicalAssetProperty<?>> createIncomingTopicRelatedPropertyList1(){
         List<PhysicalAssetProperty<?>> properties = new ArrayList<>();
-        properties.add(new PhysicalAssetProperty<>("temperature", 0));
-        properties.add(new PhysicalAssetProperty<>("humidity", 0));
+        properties.add(new PhysicalAssetProperty<>("Beats", 0));
+        return properties;
+    }
+    
+    private static List<PhysicalAssetProperty<?>> createIncomingTopicRelatedPropertyList2(){
+        List<PhysicalAssetProperty<?>> properties = new ArrayList<>();
+        properties.add(new PhysicalAssetProperty<>("Systolic", 0));
+        return properties;
+    }
+    
+    private static List<PhysicalAssetProperty<?>> createIncomingTopicRelatedPropertyList3(){
+        List<PhysicalAssetProperty<?>> properties = new ArrayList<>();
+        properties.add(new PhysicalAssetProperty<>("Diastolic", 0));
         return properties;
     }
 
-    private static MqttSubscribeFunction getSensorStateFunction(){
+    private static MqttSubscribeFunction getSensorStateFunction1(){
         return msgPayload -> {
-            MessageDescriptor md = new Gson().fromJson(msgPayload, MessageDescriptor.class);
             List<WldtEvent<?>> events = new ArrayList<>();
             try {
-                events.add(new PhysicalAssetPropertyWldtEvent<>("temperature", md.getTemperatureValue()));
-                events.add(new PhysicalAssetPropertyWldtEvent<>("humidity", md.getHumidityValue()));
+                events.add(new PhysicalAssetPropertyWldtEvent<>("Beats", Integer.parseInt(msgPayload)));
+            } catch (EventBusException e) {
+                e.printStackTrace();
+            }
+            return events;
+        };
+    }
+    
+    private static MqttSubscribeFunction getSensorStateFunction2(){
+        return msgPayload -> {
+            List<WldtEvent<?>> events = new ArrayList<>();
+            try {
+                events.add(new PhysicalAssetPropertyWldtEvent<>("Systolic", Integer.parseInt(msgPayload)));
+            } catch (EventBusException e) {
+                e.printStackTrace();
+            }
+            return events;
+        };
+    }
+    
+    private static MqttSubscribeFunction getSensorStateFunction3(){
+        return msgPayload -> {
+            List<WldtEvent<?>> events = new ArrayList<>();
+            try {
+                events.add(new PhysicalAssetPropertyWldtEvent<>("Diastolic", Integer.parseInt(msgPayload)));
             } catch (EventBusException e) {
                 e.printStackTrace();
             }

@@ -1,4 +1,4 @@
-package mqttPhisicalAdapter;
+package human;
 
 import it.wldt.adapter.digital.DigitalAdapter;
 import it.wldt.core.state.*;
