@@ -25,9 +25,9 @@ public class MqttProducer {
     private static String BROKER_URI = "tcp://127.0.0.1:1883";
 
     //Message Limit generated and sent by the producer
-    private static final int MESSAGE_COUNT = 50;
+    private static final int MESSAGE_COUNT = 100;
 
-    private static final long SLEEP_TIME_MS = 2000;
+    private static final long SLEEP_TIME_MS = 1500;
 
     //Topic used to publish generated demo data
     private static final String TOPIC1 = "sensor/Beats";
