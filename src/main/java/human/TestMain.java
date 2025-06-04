@@ -31,13 +31,15 @@ public class TestMain {
 
             // Create an instance of MqttPhysical Adapter Configuration
             MqttPhysicalAdapterConfiguration configMqtt = MqttPhysicalAdapterConfiguration.builder("127.0.0.1", 1883) 
-                    .addPhysicalAssetPropertyAndTopic("intensity", 0, "sensor/intensity", Integer::parseInt) 
+                    .addPhysicalAssetPropertyAndTopic("glycaemia", 0, "sensor/Glycaemia", Double::parseDouble) 
+                    .addPhysicalAssetPropertyAndTopic("triglycerides", 0, "sensor/Triglycerides", Double::parseDouble)
+                    .addPhysicalAssetPropertyAndTopic("creatinine", 0, "sensor/Creatinine", Double::parseDouble)
+                    .addPhysicalAssetPropertyAndTopic("sodium", 0, "sensor/Sodium", Double::parseDouble)
                     .addIncomingTopic(new DigitalTwinIncomingTopic("sensor/Beats", getSensorStateFunction("Beats")), createIncomingTopicRelatedPropertyList("Beats"), new ArrayList<>())
                     .addIncomingTopic(new DigitalTwinIncomingTopic("sensor/Systolic", getSensorStateFunction("Systolic")), createIncomingTopicRelatedPropertyList("Systolic"), new ArrayList<>())
                     .addIncomingTopic(new DigitalTwinIncomingTopic("sensor/Diastolic", getSensorStateFunction("Diastolic")), createIncomingTopicRelatedPropertyList("Diastolic"), new ArrayList<>())
                     .addPhysicalAssetEventAndTopic("hypertension", "text/plain", "sensor/hypertension", Function.identity())
                     .addPhysicalAssetEventAndTopic("hypotension", "text/plain", "sensor/hypotension", Function.identity())
-                    .addPhysicalAssetActionAndTopic("switch-off", "sensor.actuation", "text/plain", "sensor/actions/switch", actionBody -> "switch " + actionBody)
                     .build();
 
 
@@ -84,8 +86,6 @@ public class TestMain {
             digitalTwinEngine.startAll();
 
             Thread.sleep(2000);
-
-            consoleDigitalAdapter.invokeAction("switch-off", "off");
 
         }catch (Exception e){
             e.printStackTrace();

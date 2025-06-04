@@ -33,6 +33,11 @@ public class MqttProducer {
     private static final String TOPIC1 = "sensor/Beats";
     private static final String TOPIC2 = "sensor/Systolic";
     private static final String TOPIC3 = "sensor/Diastolic";
+    private static final String TOPIC4 = "sensor/Glycaemia";
+    private static final String TOPIC5 = "sensor/Triglycerides";
+    private static final String TOPIC6 = "sensor/Creatinine";
+    private static final String TOPIC7 = "sensor/Sodium";
+    
 
     public static void main(String[] args) {
 
@@ -65,29 +70,54 @@ public class MqttProducer {
 
             //Create an instance of an Engine Temperature Sensor
             SmartWatch MySmartWatch = new SmartWatch();
+            Sensor MySensor = new Sensor();
 
             //Start to publish MESSAGE_COUNT messages
             for(int i = 0; i < MESSAGE_COUNT; i++) {
 
                 //Get updated temperature value and build the associated Json Message
                 //through the internal method buildJsonMessage
-            	String payloadBeats =  ""+MySmartWatch.getBeatsMinute();
-            	String payloadSystolic = ""+MySmartWatch.getSystolicPressure();
-            	String payloadDiastolic = ""+ MySmartWatch.getDiastolicPressure();
-            	//String payloadString = "Time: "+System.currentTimeMillis()+" , ENGINE_SENSOR , Battiti al minuto: "+MySmartWatch.getBeatsMinute()+", Pressione sistolica: "+MySmartWatch.getSystolicPressure()+", Pressione diastolica: "+ MySmartWatch.getDiastolicPressure();
-
+            	String payloadBeats         = "" + MySmartWatch.getBeatsMinute();
+            	String payloadSystolic      = "" + MySmartWatch.getSystolicPressure();
+            	String payloadDiastolic     = "" + MySmartWatch.getDiastolicPressure();
+            	String payloadGlycaemia     = "" + MySensor.getGlycaemia();
+            	String payloadTriglycerides = "" + MySensor.getTriglycerides();
+            	String payloadCreatinine    = "" + MySensor.getCreatinine();
+            	String payloadSodium        = "" + MySensor.getSodium();
             	//Internal Method to publish MQTT data using the created MQTT Client
             	if(payloadBeats != null) {
             		publishData(client, TOPIC1, payloadBeats);
-	            	if(payloadSystolic != null) {
-	            		publishData(client, TOPIC2, payloadSystolic);
-		            	if(payloadSystolic != null)
-		            		publishData(client, TOPIC3, payloadDiastolic);    		
-		            	else
-		            		logger.error("Skipping message send due to NULL Payload !");
-	            	}else
-	            		logger.error("Skipping message send due to NULL Payload !");
             	}else
+            		logger.error("Skipping message send due to NULL Payload !");
+            	
+            	if(payloadSystolic != null) {
+            		publishData(client, TOPIC2, payloadSystolic);	
+            	}else
+            		logger.error("Skipping message send due to NULL Payload !");
+            	
+            	if(payloadDiastolic != null)
+            		publishData(client, TOPIC3, payloadDiastolic);    		
+            	else
+            		logger.error("Skipping message send due to NULL Payload !");
+            	
+            	if(payloadGlycaemia != null)
+            		publishData(client, TOPIC4, payloadGlycaemia);    		
+            	else
+            		logger.error("Skipping message send due to NULL Payload !");
+            	
+            	if(payloadTriglycerides != null)
+            		publishData(client, TOPIC5, payloadTriglycerides);    		
+            	else
+            		logger.error("Skipping message send due to NULL Payload !");
+            	
+            	if(payloadCreatinine != null)
+            		publishData(client, TOPIC6, payloadCreatinine);    		
+            	else
+            		logger.error("Skipping message send due to NULL Payload !");
+            	
+            	if(payloadSodium != null)
+            		publishData(client, TOPIC7, payloadSodium);    		
+            	else
             		logger.error("Skipping message send due to NULL Payload !");
 
             	Thread.sleep(SLEEP_TIME_MS);
