@@ -19,21 +19,17 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import human.Sensor;
-import human.SmartWatch;
 import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapterConfiguration;
 import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapterConfigurationBuilder;
 import it.wldt.adapter.mqtt.physical.exception.MqttPhysicalAdapterConfigurationException;
-import mqttPhisicalAdapter.JsonProducer;
 
 public class ParserCSV {
-	private final static Logger logger = LoggerFactory.getLogger(JsonProducer.class);
+	private final static Logger logger = LoggerFactory.getLogger(ParserCSV.class);
 
     //BROKER URL
     private static String BROKER_URI = "tcp://127.0.0.1:1883";
 
     //Topic used to publish generated demo data
-    private static final String TOPIC = "sensor/";
 	
 	private String nomeFile;
     private List<String> allDate = new ArrayList<>();

@@ -4,7 +4,6 @@ import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapter;
 import it.wldt.adapter.http.digital.adapter.HttpDigitalAdapterConfiguration;
 import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapter;
 import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapterConfiguration;
-import it.wldt.adapter.mqtt.physical.topic.MqttQosLevel;
 import it.wldt.adapter.mqtt.physical.topic.incoming.DigitalTwinIncomingTopic;
 import it.wldt.adapter.mqtt.physical.topic.incoming.MqttSubscribeFunction;
 import it.wldt.adapter.physical.PhysicalAssetProperty;
@@ -13,9 +12,6 @@ import it.wldt.core.engine.DigitalTwin;
 import it.wldt.core.engine.DigitalTwinEngine;
 import it.wldt.core.event.WldtEvent;
 import it.wldt.exception.*;
-import it.wldt.storage.DefaultWldtStorage;
-import parser.ParserCSV;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -87,8 +83,6 @@ public class TestMain {
             // Start all the DTs registered on the engine
             digitalTwinEngine.startAll();
             
-            parser.updateDate();
-
 
         }catch (Exception e){
             e.printStackTrace();
