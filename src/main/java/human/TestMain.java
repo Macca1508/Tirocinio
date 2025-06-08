@@ -14,6 +14,7 @@ import it.wldt.core.engine.DigitalTwinEngine;
 import it.wldt.core.event.WldtEvent;
 import it.wldt.exception.*;
 import it.wldt.storage.DefaultWldtStorage;
+import parser.ParserCSV;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +69,7 @@ public class TestMain {
 
             //Add both Digital and Physical Adapters to the DT
             digitalTwin.addDigitalAdapter(consoleDigitalAdapter);
+            //digitalTwin.addPhysicalAdapter(mqttPhysicalAdapter); 
             digitalTwin.addPhysicalAdapter(mqttPhysicalAdapter); 
             
             // Create a new WldtStorage instance using the default implementation and observing all the events
@@ -84,8 +86,9 @@ public class TestMain {
 
             // Start all the DTs registered on the engine
             digitalTwinEngine.startAll();
+            
+            parser.updateDate();
 
-            Thread.sleep(2000);
 
         }catch (Exception e){
             e.printStackTrace();
