@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClientPersistence;
@@ -33,7 +32,7 @@ public class ParserCSV {
 	
 	private String nomeFile;
     private List<String> allDate = new ArrayList<>();
-    private List<String> date = new ArrayList<>();
+    private List<String> dates = new ArrayList<>();
     private List<String> header = new ArrayList<>();
 	
 	public ParserCSV(String nome) {
@@ -44,9 +43,9 @@ public class ParserCSV {
 		try {
 			header = Arrays.asList(Files.newBufferedReader(Paths.get(nomeFile)).readLine().split(";"));
 			allDate = Files.readAllLines(Paths.get(nomeFile));
-			allDate.forEach(linea -> Arrays.asList(linea.split(";")).forEach(e -> date.add(e)));
-			date.removeAll(header);
-			System.out.println(date.size());
+			allDate.forEach(linea -> Arrays.asList(linea.split(";")).forEach(e -> dates.add(e)));
+			dates.removeAll(header);
+			System.out.println(dates.size());
 			//date.forEach(dati -> System.out.println("dato = "+dati));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -59,7 +58,17 @@ public class ParserCSV {
 		 try {
 			 MqttPhysicalAdapterConfigurationBuilder conf = MqttPhysicalAdapterConfiguration.builder("127.0.0.1", 1883);
 			 for(int i=0;i<header.size();i++) {
-				 conf.addPhysicalAssetPropertyAndTopic(header.get(i), 0, "topic/"+header.get(i), Double::parseDouble);
+				 if(identifyDataType(dates.get(i)).equals("Integer")) {
+					 System.out.println("Valore letto "+ dates.get(i)+ " tipo : Integer");
+					 conf.addPhysicalAssetPropertyAndTopic(header.get(i), 0, "topic/"+header.get(i), Double::parseDouble);
+				 }else if(identifyDataType(dates.get(i)).equals("Double")) {
+					 System.out.println("Valore letto "+ dates.get(i)+ " tipo : Double");
+					 conf.addPhysicalAssetPropertyAndTopic(header.get(i), 0, "topic/"+header.get(i), Integer::parseInt);
+				 }else if(identifyDataType(dates.get(i)).equals("String")) {
+					 System.out.println("Valore letto "+ dates.get(i)+ " tipo : String");
+					 conf.addPhysicalAssetPropertyAndTopic(header.get(i), 0, "topic/"+header.get(i), String::toUpperCase);
+				 }else
+					 System.out.println("Valore letto "+ dates.get(i) +" da errore");
 			 }
 			 MqttPhysicalAdapterConfiguration configurato = conf.build();
 			 return configurato;
@@ -67,6 +76,23 @@ public class ParserCSV {
 			e.printStackTrace();
 		 }
 		 return null;
+	}
+	
+	public String identifyDataType(String data){
+		String input= data.strip();
+		try {
+	        Integer.parseInt(input);
+	        return "Integer";
+	    } catch (Exception e){  
+        }		
+		
+		try {
+	        Double.parseDouble(input);
+	        return "Double";
+	    } catch (Exception e){
+        }
+		
+		return "String";
 	}
 	
 	public void updateDate() {
@@ -88,8 +114,10 @@ public class ParserCSV {
             logger.info("Connected ! Client Id: {}", mqttClientId);
 
             //Start to publish MESSAGE_COUNT messages
-            for(int i = 0; i < date.size(); i++) 
-            		publishData(client,"topic/"+header.get(i%header.size()), date.get(i));
+            for(int i = 0; i < dates.size(); i++) {
+            		publishData(client,"topic/"+header.get(i%header.size()), dates.get(i).strip());
+            		System.out.println(header.get(i%header.size())+" = "+ dates.get(i).strip());
+            }
             //Disconnect from the broker and close connection
             client.disconnect();
             client.close();
@@ -118,4 +146,11 @@ public class ParserCSV {
         }
 
     }
+	
+	public static void main(String[] args) {
+		ParserCSV a = new ParserCSV("large_dataset.csv");
+		MqttPhysicalAdapterConfiguration p = a.mqttAdapter();
+		a.updateDate();
+	}
+	
 }

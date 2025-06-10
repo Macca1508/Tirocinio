@@ -16,7 +16,6 @@ public class Test {
 	            DigitalTwin digitalTwin = new DigitalTwin("mqtt-digital-twin", new MyShadowingFunction());
 	            
 	            ParserCSV parser = new ParserCSV("large_dataset.csv");
-	            
 	            // Create an Instance of ConsoleDigital Adapter
 	            ConsoleDigitalAdapter consoleDigitalAdapter = new ConsoleDigitalAdapter();
 

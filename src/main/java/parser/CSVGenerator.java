@@ -1,14 +1,15 @@
 package parser;
 
 import java.io.*;
+import java.util.Locale;
 import java.util.Random;
 
 public class CSVGenerator {
     private static final Random random = new Random();
     
     public static void main(String[] args) {
-        String fileName = "large_dataset_250000.csv";
-        int numRows = 250000; // Cambia questo numero per più/meno righe
+        String fileName = "large_dataset.csv";
+        int numRows = 50; // Cambia questo numero per più/meno righe
         
         try {
             generateCSV(fileName, numRows);
@@ -32,11 +33,11 @@ public class CSVGenerator {
                 // patient_id
                 row.append("P").append(String.format("%06d", i)).append(";");
                 
-                // body_mass_at_visit_kg (3-25 kg per bambini)
-                row.append(String.format("%.2f", 3.0 + random.nextDouble() * 22.0)).append(";");
+                // body_mass_at_visit_kg (3-25 kg per bambini) - FORMATO DOUBLE
+                row.append(String.format(Locale.US, "%.2f", 3.0 + random.nextDouble() * 22.0)).append(";");
                 
-                // length_at_visit_cm (45-120 cm)
-                row.append(String.format("%.1f", 45.0 + random.nextDouble() * 75.0)).append(";");
+                // length_at_visit_cm (45-120 cm) - FORMATO DOUBLE
+                row.append(String.format(Locale.US, "%.1f", 45.0 + random.nextDouble() * 75.0)).append(";");
                 
                 // walking_experience_months (0-36 mesi)
                 row.append(random.nextInt(37)).append(";");
@@ -47,53 +48,53 @@ public class CSVGenerator {
                 // BSID_III_class (1-4)
                 row.append(random.nextInt(4) + 1).append(";");
                 
-                // Valori HR (Heart Rate) - range realistico 80-180 bpm
+                // Valori HR (Heart Rate) - range realistico 80-180 bpm - FORMATO DOUBLE
                 for (int j = 0; j < 3; j++) {
-                    row.append(String.format("%.2f", 80.0 + random.nextDouble() * 100.0)).append(";");
+                    row.append(String.format(Locale.US, "%.2f", 80.0 + random.nextDouble() * 100.0)).append(";");
                 }
                 
-                // Valori SEN (Sensori) - range 0-100
+                // Valori SEN (Sensori) - range 0-100 - FORMATO DOUBLE
                 for (int j = 0; j < 18; j++) {
-                    row.append(String.format("%.3f", random.nextDouble() * 100.0)).append(";");
+                    row.append(String.format(Locale.US, "%.3f", random.nextDouble() * 100.0)).append(";");
                 }
                 
-                // Valori RR, DET, AVGL - range variabile
+                // Valori RR, DET, AVGL - range variabile - FORMATO DOUBLE
                 for (int j = 0; j < 9; j++) {
-                    row.append(String.format("%.4f", random.nextDouble() * 10.0)).append(";");
+                    row.append(String.format(Locale.US, "%.4f", random.nextDouble() * 10.0)).append(";");
                 }
                 
                 // Parametri di camminata
-                // Stride (lunghezza passo) - cm
-                row.append(String.format("%.2f", 15.0 + random.nextDouble() * 45.0)).append(";");
+                // Stride (lunghezza passo) - cm - FORMATO DOUBLE
+                row.append(String.format(Locale.US, "%.2f", 15.0 + random.nextDouble() * 45.0)).append(";");
                 
                 // nStride (numero di passi)
                 row.append(random.nextInt(200) + 50).append(";");
                 
-                // Step (tempo passo) - secondi
-                row.append(String.format("%.3f", 0.3 + random.nextDouble() * 1.2)).append(";");
+                // Step (tempo passo) - secondi - FORMATO DOUBLE
+                row.append(String.format(Locale.US, "%.3f", 0.3 + random.nextDouble() * 1.2)).append(";");
                 
                 // nStep (numero di step)
                 row.append(random.nextInt(400) + 100).append(";");
                 
-                // Stance% (percentuale appoggio)
-                row.append(String.format("%.2f", 55.0 + random.nextDouble() * 25.0)).append(";");
+                // Stance% (percentuale appoggio) - FORMATO DOUBLE
+                row.append(String.format(Locale.US, "%.2f", 55.0 + random.nextDouble() * 25.0)).append(";");
                 
-                // DS% (Double Support %)
-                row.append(String.format("%.2f", 10.0 + random.nextDouble() * 30.0)).append(";");
+                // DS% (Double Support %) - FORMATO DOUBLE
+                row.append(String.format(Locale.US, "%.2f", 10.0 + random.nextDouble() * 30.0)).append(";");
                 
-                // Deviazioni standard
+                // Deviazioni standard - FORMATO DOUBLE
                 for (int j = 0; j < 4; j++) {
-                    row.append(String.format("%.4f", random.nextDouble() * 5.0)).append(";");
+                    row.append(String.format(Locale.US, "%.4f", random.nextDouble() * 5.0)).append(";");
                 }
                 
-                // Valori PSD (Power Spectral Density)
+                // Valori PSD (Power Spectral Density) - FORMATO DOUBLE
                 for (int j = 0; j < 12; j++) {
-                    row.append(String.format("%.6f", random.nextDouble() * 0.001)).append(";");
+                    row.append(String.format(Locale.US, "%.6f", random.nextDouble() * 0.001)).append(";");
                 }
                 
-                // Valori simmetria (0-1)
-                row.append(String.format("%.4f", random.nextDouble())).append(";");
-                row.append(String.format("%.4f", random.nextDouble()));
+                // Valori simmetria (0-1) - FORMATO DOUBLE
+                row.append(String.format(Locale.US, "%.4f", random.nextDouble())).append(";");
+                row.append(String.format(Locale.US, "%.4f", random.nextDouble()));
                 
                 writer.println(row.toString());
                 
